@@ -9,7 +9,6 @@ Created on Sat Feb  8 17:24:38 2020
 
 from sklearn import tree
 from sklearn.externals.six import StringIO
-from sklearn import datasets
 from IPython.display import Image  
 from sklearn.tree import export_graphviz
 import pydotplus
@@ -17,7 +16,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 # import some data to play with
-iris = pd.read_csv("C:/Users/Utente/Google Drive/University/DataScience/iris.csv")
+iris = pd.read_csv("./iris.csv")
 #print (iris.head())
 #print (iris.describe())
 #print (iris.corr())
