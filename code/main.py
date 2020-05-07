@@ -45,6 +45,9 @@ frame.iloc[:,:] = StandardScaler().fit_transform(frame.iloc[:,:])
 #applying regression models
 model_tree(frame)
 model_SVR(frame)
+model_SVR_all(frame)
+model_forest(frame)
+model_forest_hyp(frame)
 
 #frameSMA= movingAverage(frame)
 #visualize_averageHistogram(frameSMA, frame)
