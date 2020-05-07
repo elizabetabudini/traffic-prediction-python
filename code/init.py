@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+"""
+Author: Elizabeta Budini
+"""
+file="region_traffic.csv"
+regionID="region_id"
+roadCat="road_category_id"
+linkMiles="total_link_length_miles"
+linkKM ="total_link_length_km"
+regionName="name"
+allV="all_motor_vehicles"
+lorries="lorries"
+vans="vans"
+motorcycles="two_wheeled_motor_vehicles"
+year="year"
+pedalCycles="pedal_cycles"
+cars="cars_and_taxis"
+coaches="buses_and_coaches"
