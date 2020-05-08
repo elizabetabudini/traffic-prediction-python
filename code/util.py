@@ -9,6 +9,13 @@ Author: Elizabeta Budini
 import pandas as pd
 from init import *
 import numpy as np
+from hyperopt import hp, tpe, fmin, Trials, STATUS_OK
+from sklearn import datasets
+from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble.forest import RandomForestClassifier
+from sklearn.preprocessing import scale, normalize
+from sklearn.model_selection import cross_val_score
 
 def movingAverage(frame):
     nFrame=frame.groupby([year, roadCat]).sum().sort_values([roadCat,year], ascending=True).reset_index()
@@ -28,7 +35,7 @@ def movingAverage(frame):
     newFrame=newFrame.drop([regionID], axis=1)
     return newFrame
 
-def independentFeatures(frame):
+def filterFeatures(frame):
     #the independent variables need to be uncorrelated with each other. 
     #Correlation with output variable
     corr_matrix = frame.corr().abs()
@@ -42,6 +49,5 @@ def independentFeatures(frame):
     #print("to drop= ", to_drop)
     #print("features= ", x.columns)
     #print("target= ", y)
-    
     
     return x

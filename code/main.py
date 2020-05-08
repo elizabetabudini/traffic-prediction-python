@@ -27,27 +27,36 @@ frame=frame.drop("ons_code", axis=1)
 frame.iloc[:, -7:] /= 1e9
 describe=frame.describe()
 print(describe)
-        
-#print("categorical data:",frame.select_dtypes(include=['object']).copy())
-#print("null data:",frame.isnull().sum())
-#enc = OneHotEncoder(handle_unknown='ignore')
-#enc.fit_transform(frame, frame["name"])
+
+
 
 visualize_histogram_by_year(frame)
 visualize_regional_stackbar(frame)
 visualize_vehicle_type(frame)
 visualize_2018(frame)
+visualize_distribution(frame)
 
-frame=frame.drop(regionName, axis=1)
+#print("categorical data:",frame.select_dtypes(include=['object']).copy())
+#print("null data:",frame.isnull().sum()
+# creating instance of one-hot-encoder
+#enc = OneHotEncoder(handle_unknown='ignore')
+#enc_df = pd.DataFrame(enc.fit_transform(frame[[regionName]]).toarray())
+# merge with main df frame on key values
+#frame = frame.join(enc_df)
+#frame=frame.dropna()
+
+
+#regionID and region name have the same information
+frame=frame.drop([regionName], axis=1)
 frame.iloc[:,:] = StandardScaler().fit_transform(frame.iloc[:,:])
 
 
 #applying regression models
 model_tree(frame)
 model_SVR(frame)
-model_SVR_all(frame)
 model_forest(frame)
-model_forest_hyp(frame)
+#model_forest_hyp(frame)
+model_linear(frame)
 
 #frameSMA= movingAverage(frame)
 #visualize_averageHistogram(frameSMA, frame)

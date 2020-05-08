@@ -9,6 +9,9 @@ from init import *
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
+import seaborn as sns 
+from prettytable import PrettyTable
+from tabulate import tabulate
 
 ## This function visualizes:
 ## Vehicle miles travelled by selected vehicle types in Great Britain, 1993-2018
@@ -127,16 +130,28 @@ def visualize_averageHistogram(frameSMA, frame):
      plt.legend(loc=2)
      
 def visualize_2018(frame):
-   from prettytable import PrettyTable
+   
    nFrame=frame.copy()
    nFrame= nFrame[nFrame[year]==2018]
    nFrame=nFrame.groupby(year).sum().reset_index()
    df=nFrame.iloc[:, -7:].transpose()
    df=df.sort_values(by=[0],ascending=False)
-   
-   from tabulate import tabulate
+
    print(tabulate(df, headers=['Vehicle type', "Billion vehicle miles"], tablefmt='psql'))
 
+def visualize_distribution(frame):
+    
+    plt.figure(8)
+    cols = [allV, cars, vans, motorcycles]
+    sns.pairplot(frame[cols], height=2.5)
+    plt.tight_layout() 
+    plt.show()
+    
+    plt.figure(9)
+    cols = [allV, regionID, linkKM, roadCat]
+    sns.pairplot(frame[cols], height=3)
+    plt.tight_layout() 
+    plt.show()
 
     
     
