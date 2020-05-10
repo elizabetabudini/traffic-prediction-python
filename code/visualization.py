@@ -13,9 +13,16 @@ import seaborn as sns
 from prettytable import PrettyTable
 from tabulate import tabulate
 
-## This function visualizes:
-## Vehicle miles travelled by selected vehicle types in Great Britain, 1993-2018
-def visualize_histogram_by_year(frame):
+def visualize_by_year(frame):
+    # """
+    # Plots a multiple line plot for the vehicles mile travled 
+    # by selected vehicle type over the years.
+    # Five different lines will be plotted, one for each vehicle type
+    
+    # x = years (1993-2018)
+    # y = billion of vehicle miles traveled
+    
+    # """
     plt.figure(1)
     nFrame=frame.copy()
     nFrame.iloc[:,-7:] = MinMaxScaler().fit_transform(nFrame.iloc[:,-7:])
@@ -23,7 +30,7 @@ def visualize_histogram_by_year(frame):
     nFrame=nFrame.groupby(year).sum().reset_index()
 
     print("\n\n************************************************************")
-    print("GROUP DISTRIBUTION ON TRAFFIC BY YEAR")
+    print("GROUP DISTRIBUTION OF TRAFFIC BY YEAR")
     print(nFrame)
     # Make a data frame
     df=pd.DataFrame({'x': nFrame[year], 
@@ -70,6 +77,14 @@ def visualize_histogram_by_year(frame):
     plt.savefig('img/by_year.png', bbox_inches='tight')
     
 def visualize_regional_stackbar(frame):
+    # """
+    # Plots a vertical stack bar plot for types of vehicle used in 
+    # different regions in 2018
+    
+    # x = regions (11)
+    # y = billion of vehicle miles traveled
+    
+    # """
      plt.figure(2)
      #regional traffic in 2018
      nFrame= frame[frame["year"]==2018]
@@ -90,6 +105,15 @@ def visualize_regional_stackbar(frame):
      plt.savefig('img/regional.png', bbox_inches='tight')
      
 def visualize_vehicle_type(frame):
+    # """
+    # Plots a horizontal bar plot to compare traffic composition in
+    # 1993 and 2018. It shows how different types of vehicles contribute
+    # to the total traffic.
+    
+    # x = billion of vehicle miles traveled
+    # y = years (1993 and 2018)
+    
+    # """
     plt.figure(3)
     #group by region name
     nFrame=frame.groupby(year).sum().sort_values(by=[allV],ascending=True).reset_index()
@@ -109,28 +133,12 @@ def visualize_vehicle_type(frame):
     plt.legend(loc=4)
     plt.savefig('img/type.png', bbox_inches='tight')
      
-def visualize_averageHistogram(frameSMA, frame):
-     plt.figure(4)
-     
-     frameSMA= frameSMA[frameSMA[roadCat]==1]
-     frame=frame[frame[roadCat]==1]
-  
-     
-     print("\n\n************************************************************")
-     print("Average traffic for road category 1")
-     print(frame)
-     
-     plt.figure(figsize=[6,5])
-     plt.title("Average traffic for road category 1", loc='left', fontsize=12, fontweight=0, color='orange')
-     plt.grid(True)
-     plt.xlabel("Year")
-     plt.ylabel("Billion vehicle miles")
-     plt.plot(frameSMA[year], frameSMA[allV],label='data')
-     plt.plot(frameSMA[year], frameSMA['SMA_5'],label='SMA 5')
-     plt.legend(loc=2)
-     
 def visualize_2018(frame):
-   
+   # """
+   #  Prints in the console a pretty table containing total 
+   #  amount of vehicle miles travelled for each vehicle in 2018
+    
+   #  """
    nFrame=frame.copy()
    nFrame= nFrame[nFrame[year]==2018]
    nFrame=nFrame.groupby(year).sum().reset_index()
@@ -140,6 +148,11 @@ def visualize_2018(frame):
    print(tabulate(df, headers=['Vehicle type', "Billion vehicle miles"], tablefmt='psql'))
 
 def visualize_distribution(frame):
+    # """
+    # Plots pairwise relationships in the dataset to find
+    # distribution patterns and outliers 
+    
+    # """
     
     plt.figure(8)
     cols = [allV, cars, vans, motorcycles]

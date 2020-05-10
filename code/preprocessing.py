@@ -7,9 +7,12 @@ from init import *
 from util import *
 
 def data_preprocessing(frame):
-#    print( frame)
-#    print(frame.shape)
-#    print(frame.dtypes)
+    # """
+    # Checks if dataset has null values.
+    # Checks if some link length is equal to 0 and removes those rows
+    # Describes the distribution of unique values for some columns
+    
+    # """
     missing_value=frame.isna()
 #    print(missing_value)
     

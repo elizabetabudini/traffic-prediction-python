@@ -30,11 +30,13 @@ print(describe)
 
 
 
-visualize_histogram_by_year(frame)
+visualize_by_year(frame)
 visualize_regional_stackbar(frame)
 visualize_vehicle_type(frame)
 visualize_2018(frame)
 #visualize_distribution(frame)
+
+
 
 #print("categorical data:",frame.select_dtypes(include=['object']).copy())
 #print("null data:",frame.isnull().sum()
@@ -51,14 +53,14 @@ frame=frame.drop([regionName], axis=1)
 
 
 #applying regression models
-model_tree(frame)
-model_SVR(frame)
-model_forest(frame)
-model_forest_cross(frame)
+#model_tree(frame)
+#model_SVR(frame)
+#model_forest(frame)
+#model_forest_cross(frame)
 #model_forest_hyp(frame)
-model_linear(frame)
-linear2(frame)
+#model_linear(frame)
+#linear2(frame)
 
-#frameSMA= movingAverage(frame)
-#visualize_averageHistogram(frameSMA, frame)
-#fit_model2(frame)
+frameSynthetic= add_synthetic_features(frame)
+frameSynthetic=frameSynthetic.drop([cars,motorcycles,coaches,lorries,vans, pedalCycles, linkKM], axis=1)
+#model_forest_synthetic(frameSynthetic)
