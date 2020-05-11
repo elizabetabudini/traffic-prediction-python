@@ -66,7 +66,6 @@ def rfr_cv(n_estimators, max_features, data, targets):
 
 def optimize_rfr(data, targets):
     #using https://github.com/fmfn/BayesianOptimization
-    # """
     
     # Apply Bayesian Optimization to Random Forest parameters.
     

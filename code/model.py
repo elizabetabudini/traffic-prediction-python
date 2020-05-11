@@ -31,7 +31,7 @@ def model_tree(frame):
     # ML model applying Decision Tree Regression
     
     # input: Pandas dataframe to use in modelling
-    # output: a tuple (score, error)
+    # output: (score, error, execution time)
     
     # """
     frame.iloc[:,:-1] = StandardScaler().fit_transform(frame.iloc[:,:-1])
@@ -49,7 +49,9 @@ def model_tree(frame):
     
     #apply regression model
     model_tree= DecisionTreeRegressor()
+    t0 = time.time()
     model_tree.fit(X_train, y_train)
+    execution = time.time() - t0
     y_pred = model_tree.predict(X_test)
     l_reg = model_tree.score(X_test, y_test)
     
@@ -57,14 +59,14 @@ def model_tree(frame):
     print("score: %.4f" % l_reg)
     regression_error = mean_absolute_error(y_test, y_pred)
     print("regression_error: %.4f" % regression_error)
-    return l_reg, regression_error
+    return l_reg, regression_error, execution
     
 def model_forest(frame):
     # """
     # ML model applying Random Forest Regression to filtered features
     
     # input: Pandas dataframe to use in modelling
-    # output: a tuple (score, error)
+    # output: (score, error, execution time)
     
     # """
     frame.iloc[:,:-1] = StandardScaler().fit_transform(frame.iloc[:,:-1])
@@ -82,7 +84,9 @@ def model_forest(frame):
     
     #apply regression model
     model_forest= RandomForestRegressor()
+    t0 = time.time()
     model_forest.fit(X_train, y_train)
+    execution = time.time() - t0
     y_pred = model_forest.predict(X_test)
     l_reg = model_forest.score(X_test, y_test)
     
@@ -90,7 +94,7 @@ def model_forest(frame):
     print("score model_forest: %.4f" % l_reg)
     regression_error = mean_absolute_error(y_test, y_pred)
     print("regression_error: %.4f" % regression_error)
-    return l_reg, regression_error
+    return l_reg, regression_error, execution
     
 def model_forest_cross(frame):
     # """
@@ -98,7 +102,7 @@ def model_forest_cross(frame):
     # using cross validation
     
     # input: Pandas dataframe to use in modelling
-    # output: a tuple (score, error)
+    # output: (score, error, execution time)
     
     # """
     print("\n\n************************************************************")
@@ -108,7 +112,9 @@ def model_forest_cross(frame):
     print("features=", X.columns)
     #apply regression model
     model_forest= RandomForestRegressor()
+    t0 = time.time()
     model_forest.fit(X, y)
+    execution = time.time() - t0
     y_pred=model_forest.predict(X)
     scores= cross_val_score(model_forest, X, y, cv=10)
     #show results of regression model
@@ -116,22 +122,22 @@ def model_forest_cross(frame):
     print("Average cross validation score: {:.4f}".format(scores.mean()))
     regression_error = mean_absolute_error(y, y_pred)
     print("regression_error: %.4f" % regression_error)
-    return l_reg, regression_error
+    return scores, regression_error, execution
   
 
 def model_SVR(frame):
     # """
     # ML model applying Support Vector Regression to all features
-    # using GridSearchto tune the model hyperparameters
+    # using GridSearch to tune the model hyperparameters
     
     # input: Pandas dataframe to use in modelling
-    # output: a tuple (score, error)
+    # output: (score, error, execution time)
     
     # """
     frame.iloc[:,:-1] = StandardScaler().fit_transform(frame.iloc[:,:-1])
     y=frame.iloc[:,-1] #target
-    x=frame.iloc[:, :-2]
-    #x=filterFeatures(frame) #features
+    #x=frame.iloc[:, :-2]
+    x=filterFeatures(frame) #features
     print("\n\n************************************************************")
     print("MODEL SV Regression")
     print("features=", x.columns)
@@ -140,14 +146,21 @@ def model_SVR(frame):
     validation_size = 0.3
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=validation_size)
    
-    model_SVR = GridSearchCV(SVR(gamma=0.1),
-                   param_grid={"C": [1e0, 1e1, 1e2, 1e3],
-                               "gamma": np.logspace(-2, 2, 5)})
+    # model_SVR = GridSearchCV(SVR(gamma=0.1),
+    #                param_grid={"C": [1e0, 1e1, 1e2, 1e3],
+    #                            "gamma": np.logspace(-2, 2, 5)})
+    
+    # model_SVR = RandomizedSearchCV(SVR(gamma=0.1),
+    #                param_distributions={"C": [1e0, 1e1, 1e2, 1e3],
+    #                            "gamma": np.logspace(-2, 2, 5)})
+    
+    model_SVR= GridSearchCV(SVR(gamma=0.1),
+                    param_grid={"gamma": np.logspace(-2, 2, 5)})
     
     #apply regression model
     t0 = time.time()
     model_SVR.fit(X_train, y_train)
-    svr_fit = time.time() - t0
+    execution = time.time() - t0
     
     y_pred = model_SVR.predict(X_test)
     l_reg = model_SVR.score(X_test, y_test)
@@ -156,7 +169,8 @@ def model_SVR(frame):
     print("score: %.4f" % l_reg)
     regression_error = mean_absolute_error(y_test, y_pred)
     print("regression_error: %.4f" % regression_error)
-    print("Execution time: ", svr_fit)
+    print("Execution time: ", execution)
+    return l_reg, regression_error, execution
 
     
     
@@ -165,8 +179,7 @@ def model_linear(frame):
     # ML model applying Linear Regression to linearly correlated features
     
     # input: Pandas dataframe to use in modelling
-    # output: a tuple (score, error)
-    
+    # output: (score, error, execution time)
     # """
     print("\n\n************************************************************")
     print("MODEL Linear regression 1")
@@ -186,7 +199,9 @@ def model_linear(frame):
     
     #apply regression model
     model_linear= LinearRegression(copy_X=True)
+    t0 = time.time()
     model_linear.fit(X_train, y_train)
+    execution = time.time() - t0
     y_pred = model_linear.predict(X_test)
     l_reg = model_linear.score(X_test, y_test)
     
@@ -194,14 +209,15 @@ def model_linear(frame):
     print("score linear: %.4f" % l_reg)
     regression_error = mean_absolute_error(y_test, y_pred)
     print("regression_error: %.4f" % regression_error)
+    return l_reg, regression_error, execution
 
 
-def linear2(frame):
+def model_linear2(frame):
     # """
     # ML model applying Linear Regression to all features
     
     # input: Pandas dataframe to use in modelling
-    # output: a tuple (score, error)
+    # output: (score, error, execution time)
     
     # """
     y2=frame.iloc[:,-1] #target
@@ -216,7 +232,9 @@ def linear2(frame):
     
     #apply regression model
     model_linear2= LinearRegression(copy_X=True)
+    t0 = time.time()
     model_linear2.fit(X_train, y_train)
+    execution = time.time() - t0
     y_pred = model_linear2.predict(X_test)
     l_reg = model_linear2.score(X_test, y_test)
     
@@ -224,17 +242,18 @@ def linear2(frame):
     print("score linear2: %.4f" % l_reg)
     regression_error = mean_absolute_error(y_test, y_pred)
     print("regression_error: %.4f" % regression_error)
+    return l_reg, regression_error, execution
     
     
 
-def ransac(frame):
+def model_linear3(frame):
     # """
     # ML model applying Linear Regression to all features using RANSAC.
     # The outliers influence significantly linear regression, RANSAC will
     # select only inliers when fitting the model.
     
     # input: Pandas dataframe to use in modelling
-    # output: a tuple (score, error)
+    # output: (score, error, execution time)
     
     # """
     print("\n\n************************************************************")
@@ -255,7 +274,9 @@ def ransac(frame):
                              loss='absolute_loss', 
                              residual_threshold=5.0, 
                              random_state=0)
+    t0 = time.time()
     ransac.fit(X_train, y_train)
+    execution = time.time() - t0
     y_pred = ransac.predict(X_test)
     l_reg = ransac.score(X_test, y_test)
     
@@ -263,6 +284,7 @@ def ransac(frame):
     print("score linear ransac: %.4f" % l_reg)
     regression_error = mean_absolute_error(y_test, y_pred)
     print("regression_error: %.4f" % regression_error)
+    return l_reg, regression_error, execution
 
 def model_forest_synthetic(frame):
     # """
@@ -270,7 +292,7 @@ def model_forest_synthetic(frame):
     # dataset passed as input 
     
     # input: Pandas dataframe to use in modelling
-    # output: a tuple (score, error)
+    # output: (score, error, execution time)
     
     # """
 
@@ -287,7 +309,9 @@ def model_forest_synthetic(frame):
     
     #apply regression model
     model_forest= RandomForestRegressor()
+    t0 = time.time()
     model_forest.fit(X_train, y_train)
+    execution = time.time() - t0
     y_pred = model_forest.predict(X_test)
     l_reg = model_forest.score(X_test, y_test)
     
@@ -295,6 +319,7 @@ def model_forest_synthetic(frame):
     print("score model_forest: %.4f" % l_reg)
     regression_error = mean_absolute_error(y_test, y_pred)
     print("regression_error: %.4f" % regression_error)
+    return l_reg, regression_error, execution
 
 from bayes_opt.util import Colours
 
@@ -304,7 +329,7 @@ def model_forest_hyp(frame):
     # the model hyperparameters
     
     # input: Pandas dataframe to use in modelling
-    # output: a tuple (score, error)
+    # output: (score, error, execution time)
     
     # """
     frame.iloc[:,:-1] = StandardScaler().fit_transform(frame.iloc[:,:-1])
@@ -329,8 +354,8 @@ def model_forest_hyp(frame):
     #apply regression model
     t0 = time.time()
     search = model_forest_hyp.fit(X_train, y_train)
-    print(search.best_params_)
     execution = time.time() - t0
+    print(search.best_params_)
     y_pred = model_forest_hyp.predict(X_test)
     l_reg = model_forest_hyp.score(X_test, y_test)
     
@@ -339,6 +364,7 @@ def model_forest_hyp(frame):
     regression_error = mean_absolute_error(y_test, y_pred)
     print("regression_error: %.4f" % regression_error)
     print("Execution time: ", execution)
+    return l_reg, regression_error, execution
     
 
 
@@ -348,7 +374,7 @@ def model_forest_hyp_random(frame):
     # to tune the model hyperparameters
     
     # input: Pandas dataframe to use in modelling
-    # output: a tuple (score, error)
+    # output: (score, error, execution time)
     
     # """
     frame.iloc[:,:-1] = StandardScaler().fit_transform(frame.iloc[:,:-1])
@@ -374,8 +400,8 @@ def model_forest_hyp_random(frame):
     #apply regression model
     t0 = time.time()
     search = model_forest_hyp.fit(X_train, y_train)
-    print(search.best_params_)
     execution = time.time() - t0
+    print(search.best_params_)
     y_pred = model_forest_hyp.predict(X_test)
     l_reg = model_forest_hyp.score(X_test, y_test)
     
@@ -384,6 +410,7 @@ def model_forest_hyp_random(frame):
     regression_error = mean_absolute_error(y_test, y_pred)
     print("regression_error: %.4f" % regression_error)
     print("Execution time: ", execution)
+    return l_reg, regression_error, execution
 
 def bayesian_random_forest(frame):
     # """
@@ -408,5 +435,4 @@ def bayesian_random_forest(frame):
     optimize_rfr(x, y)
     execution = time.time() - t0
     print("Execution time: ", execution)
-    return 
     
