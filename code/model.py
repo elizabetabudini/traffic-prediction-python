@@ -324,6 +324,9 @@ def model_forest_synthetic(frame):
 from bayes_opt.util import Colours
 
 def model_forest_hyp(frame):
+    
+    #Adapted from https://link.springer.com/book/10.1007%2F978-1-4842-4947-5
+    
     # """
     # ML model applying Random Forest Regression with GridSearchCV to tune 
     # the model hyperparameters

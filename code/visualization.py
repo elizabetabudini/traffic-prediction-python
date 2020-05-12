@@ -14,6 +14,9 @@ from prettytable import PrettyTable
 from tabulate import tabulate
 
 def visualize_by_year(frame):
+    
+    #Adapted from : https://python-graph-gallery.com/123-highlight-a-line-in-line-plot/
+    
     # """
     # Plots a multiple line plot for the vehicles mile travled 
     # by selected vehicle type over the years.
@@ -58,15 +61,14 @@ def visualize_by_year(frame):
         df[column] -= diff
      
      
-    # create a color palette
-    palette = plt.get_cmap('Set1')
-     
+    # get colormap instance
+    colormap = plt.get_cmap('Set1')
     # multiple line plot
     num=0
     for column in df.drop('x', axis=1):
         num+=1
-        plt.plot(df['x'], df[column], marker='', color=palette(num), linewidth=2, alpha=0.9, label=column)
-     
+        plt.plot(df['x'], df[column], marker='', linewidth=2, alpha=0.9, label=column, color=colormap(num))
+    
     # Add legend
     plt.legend(loc=2, ncol=1)
      
